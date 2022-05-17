@@ -7,6 +7,8 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/products", (req, res) => {
+  const query = req.query;
+  console.log("Query", query);
   res.send({
     products: [
       {
@@ -35,7 +37,16 @@ app.get("/products", (req, res) => {
 });
 
 app.post("/products", (req, res) => {
-  res.send("상품이 등록되었습니다.");
+  const body = req.body;
+  res.send({
+    body: body,
+  });
+});
+
+app.get("/products/:id", (req, res) => {
+  const params = req.params;
+  const { id } = params;
+  res.send(`id는 ${id} 입니다.`);
 });
 
 app.listen(port, () => {
