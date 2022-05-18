@@ -39,9 +39,23 @@ app.get("/products", (req, res) => {
 
 app.post("/products", (req, res) => {
   const body = req.body;
-  res.send({
-    body: body,
-  });
+  const { name, description, price, seller } = body;
+  models.Product.create({
+    name: name,
+    description: description,
+    price: price,
+    seller: seller,
+  })
+    .then((result) => {
+      console.log("상품 생성 결과 : ", result);
+      res.send({
+        result,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.send("상품 업로드에 에러가 발생하였습니다.");
+    });
 });
 
 app.get("/products/:id", (req, res) => {
