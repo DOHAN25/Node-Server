@@ -39,7 +39,7 @@ app.get("/products", (req, res) => {
 
 app.post("/products", (req, res) => {
   const body = req.body;
-  const { name, description, price, seller } = body;
+  const { name, price, description, seller } = body;
   models.Product.create({
     name: name,
     description: description,
