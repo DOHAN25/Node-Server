@@ -8,53 +8,16 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/products", (req, res) => {
-  const query = req.query;
-  console.log("Query", query);
-  res.send({
-    products: [
-      {
-        id: 1,
-        name: "농구공",
-        price: 100000,
-        seller: "조던",
-        imageUrl: "images/products/basketball1.jpeg",
-      },
-      {
-        id: 2,
-        name: "축구공",
-        price: 50000,
-        seller: "메시",
-        imageUrl: "images/products/soccerball1.jpg",
-      },
-      {
-        id: 3,
-        name: "키보드",
-        price: 10000,
-        seller: "그랩",
-        imageUrl: "images/products/keyboard1.jpg",
-      },
-    ],
-  });
-});
-
-app.post("/products", (req, res) => {
-  const body = req.body;
-  const { name, price, description, seller } = body;
-  models.Product.create({
-    name: name,
-    description: description,
-    price: price,
-    seller: seller,
-  })
+  models.Products.findAll()
     .then((result) => {
-      console.log("상품 생성 결과 : ", result);
+      console.log("Products : ", result);
       res.send({
-        result,
+        products: result,
       });
     })
     .catch((error) => {
-      console.log(error);
-      res.send("상품 업로드에 에러가 발생하였습니다.");
+      console.error(error);
+      res.send("에러가 발생하였습니다.");
     });
 });
 
