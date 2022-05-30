@@ -8,7 +8,10 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/products", (req, res) => {
-  models.Products.findAll()
+  models.Product.findAll({
+    order: [["createdAt", "DESC"]],
+    attributes: ["id", "name", "price", "createdAt", "seller"],
+  })
     .then((result) => {
       console.log("Products : ", result);
       res.send({
@@ -24,6 +27,21 @@ app.get("/products", (req, res) => {
 app.get("/products/:id", (req, res) => {
   const params = req.params;
   const { id } = params;
+  models.Product.findOne({
+    where: {
+      id: id,
+    },
+  })
+    .then((result) => {
+      console.log("PRODUCTS : ", result);
+      res.send({
+        product: result,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.send("상품 조회시 에러가 발생하였습니다.");
+    });
   res.send(`id는 ${id} 입니다.`);
 });
 
