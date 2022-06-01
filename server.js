@@ -70,6 +70,14 @@ app.get("/products/:id", (req, res) => {
     });
 });
 
+app.post("/image", upload.single("image"), (req, res) => {
+  const file = req.file;
+  console.log(file);
+  res.send({
+    imageUrl: file.path,
+  });
+});
+
 app.listen(port, () => {
   console.log("서버가 돌아가고 있습니다.");
   models.sequelize
