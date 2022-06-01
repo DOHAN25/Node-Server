@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const models = require("./models");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 const port = 8080;
 
 app.use(express.json());
