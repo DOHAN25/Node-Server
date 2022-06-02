@@ -3,12 +3,21 @@ const cors = require("cors");
 const app = express();
 const models = require("./models");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "uploads/");
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    },
+  }),
+});
 const port = 8080;
 
 app.use(express.json());
 app.use(cors());
-
+app.use("/uploads", express.static("uploads"));
 app.get("/products", (req, res) => {
   models.Product.findAll({
     order: [["createdAt", "DESC"]],
@@ -22,21 +31,22 @@ app.get("/products", (req, res) => {
     })
     .catch((error) => {
       console.error(error);
-      res.send("에러가 발생하였습니다.");
+      res.status(400).send("에러가 발생하였습니다.");
     });
 });
 
 app.post("/products", (req, res) => {
   const body = req.body;
-  const { name, description, price, seller } = body;
-  if (!name || !description || !price || !seller) {
-    res.send("모든 필드를 입력해주세요");
+  const { name, description, price, seller, imageUrl } = body;
+  if (!name || !description || !price || !seller || !imageUrl) {
+    res.status(400).send("모든 필드를 입력해주세요");
   }
   models.Product.create({
     name,
     description,
     price,
     seller,
+    imageUrl,
   })
     .then((result) => {
       console.log("상품 생성 결과 : ", result);
@@ -46,7 +56,7 @@ app.post("/products", (req, res) => {
     })
     .catch((error) => {
       console.error(error);
-      res.send("상품 업로드에 문제가 발생했습니다");
+      res.status(400).send("상품 업로드에 문제가 발생했습니다");
     });
 });
 
@@ -66,7 +76,7 @@ app.get("/products/:id", (req, res) => {
     })
     .catch((error) => {
       console.error(error);
-      res.send("상품 조회시 에러가 발생하였습니다.");
+      res.status(400).send("상품 조회시 에러가 발생하였습니다.");
     });
 });
 
@@ -76,6 +86,7 @@ app.post("/image", upload.single("image"), (req, res) => {
   res.send({
     imageUrl: file.path,
   });
+  /**다양한 로직 처리가 가능하다. 용량이 큰 경우 다시 입력이라던지.. */
 });
 
 app.listen(port, () => {
