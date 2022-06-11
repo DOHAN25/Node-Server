@@ -105,6 +105,29 @@ app.post("/image", upload.single("image"), (req, res) => {
   /**다양한 로직 처리가 가능하다. 용량이 큰 경우 다시 입력이라던지.. */
 });
 
+app.post("/purchase/:id", (req, res) => {
+  const { id } = req.params;
+  models.Product.update(
+    {
+      soldout: 1,
+    },
+    {
+      where: {
+        id,
+      },
+    }
+  )
+    .then((result) => {
+      res.send({
+        result: true,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("에러가 발생했습니다.");
+    });
+});
+
 app.listen(port, () => {
   console.log("서버가 돌아가고 있습니다.");
   models.sequelize
