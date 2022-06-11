@@ -23,7 +23,11 @@ app.get("/banners", (req, res) => {
   models.Banner.findAll({
     limit: 2,
   })
-    .then((result) => {})
+    .then((result) => {
+      res.send({
+        banners: result,
+      });
+    })
     .catch((error) => {
       console.error(error);
       res.status(500).send("에러가 발생하였습니다.");
