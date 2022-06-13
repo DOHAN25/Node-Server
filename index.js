@@ -13,7 +13,8 @@ const upload = multer({
     },
   }),
 });
-const port = 8080;
+/*히로쿠에서 사용하는 포트번호를 받기 위해 수정 */
+const port = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(cors());
